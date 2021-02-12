@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:perial/DataLayer/Models/User.dart';
 import 'package:perial/DataLayer/Operations.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -14,9 +15,17 @@ class _HomeScreenState extends State<HomeScreen> {
     loadData();
   }
 
+  List<User> users = [];
+
   Future<void> loadData() async {
     var data = await Operations().getUsers(context);
     print(data);
+
+    setState(() {
+      users = data;
+    });
+
+    print(users);
   }
 
   @override
@@ -26,7 +35,12 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text("test user"),
       ),
       body: Center(
-        child: Column(children: [Text("test")]),
+        child: ListView.builder(
+          itemCount: users.length,
+          itemBuilder: (context, index) {
+            return Text(users[index].userName);
+          },
+        ),
       ),
     );
   }
