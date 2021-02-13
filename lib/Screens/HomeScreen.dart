@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:perial/DataLayer/Models/User.dart';
 import 'package:perial/DataLayer/Operations.dart';
+import 'package:perial/Screens/LogInScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -31,17 +32,18 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("test user"),
-      ),
-      body: Center(
+        appBar: AppBar(
+          title: Text("test user"),
+        ),
+        body:
+            LoginPage() /* Center(
         child: ListView.builder(
           itemCount: users.length,
           itemBuilder: (context, index) {
             return Text(users[index].userName);
           },
         ),
-      ),
-    );
+      ), */
+        );
   }
 }

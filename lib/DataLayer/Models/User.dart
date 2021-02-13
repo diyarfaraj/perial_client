@@ -5,13 +5,11 @@ User userFromJson(String str) => User.fromJson(json.decode(str));
 String userToJson(User data) => json.encode(data.toJson());
 
 class User {
-  User({
-    this.id,
-    this.userName,
-  });
-
   int id;
   String userName;
+  String password;
+
+  User({this.id, this.userName, this.password});
 
   static List<User> parseList(List<dynamic> json) {
     List<User> data = new List<User>();
@@ -23,12 +21,8 @@ class User {
   }
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-        id: json["id"],
-        userName: json["userName"],
-      );
+      id: json["id"], userName: json["userName"], password: json["password"]);
 
-  Map<String, dynamic> toJson() => {
-        "Id": id,
-        "UserName": userName,
-      };
+  Map<String, dynamic> toJson() =>
+      {"Id": id, "UserName": userName, "Password": password};
 }
