@@ -1,21 +1,26 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:perial/DataLayer/DataService.dart';
+import 'package:perial/DataLayer/Models/User.dart';
 
 class LoginPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => new _LoginPageState();
+  State<StatefulWidget> createState() => _LoginPageState();
 }
 
 // Used for controlling whether the user is loggin or creating an account
 enum FormType { login, register }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _emailFilter = new TextEditingController();
-  final TextEditingController _passwordFilter = new TextEditingController();
+  final TextEditingController _emailFilter = TextEditingController();
+  final TextEditingController _passwordFilter = TextEditingController();
   String _email = "";
   String _password = "";
   FormType _form = FormType
       .login; // our default setting is to login, and we should switch to creating an account when the user chooses to
-
+  bool loggedIn = false;
+  User loggedInUser;
   _LoginPageState() {
     _emailFilter.addListener(_emailListen);
     _passwordFilter.addListener(_passwordListen);
@@ -48,13 +53,28 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+  Future<bool> login(User user) async {
+    var response = await DataService().login(user.userName, user.password);
+
+    if (response.statusCode == 200) {
+      setState(() {
+        loggedIn = true;
+        loggedInUser = User.fromJson(jsonDecode(response.body));
+      });
+      print(loggedInUser.userName);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       appBar: _buildBar(context),
-      body: new Container(
+      body: Container(
         padding: EdgeInsets.all(16.0),
-        child: new Column(
+        child: Column(
           children: <Widget>[
             _buildTextFields(),
             _buildButtons(),
@@ -65,26 +85,26 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildBar(BuildContext context) {
-    return new AppBar(
-      title: new Text("Simple Login Example"),
+    return AppBar(
+      title: Text("Simple Login Example"),
       centerTitle: true,
     );
   }
 
   Widget _buildTextFields() {
-    return new Container(
-      child: new Column(
+    return Container(
+      child: Column(
         children: <Widget>[
-          new Container(
-            child: new TextField(
+          Container(
+            child: TextField(
               controller: _emailFilter,
-              decoration: new InputDecoration(labelText: 'Email'),
+              decoration: InputDecoration(labelText: 'Email'),
             ),
           ),
-          new Container(
-            child: new TextField(
+          Container(
+            child: TextField(
               controller: _passwordFilter,
-              decoration: new InputDecoration(labelText: 'Password'),
+              decoration: InputDecoration(labelText: 'Password'),
               obscureText: true,
             ),
           )
@@ -95,34 +115,34 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _buildButtons() {
     if (_form == FormType.login) {
-      return new Container(
-        child: new Column(
+      return Container(
+        child: Column(
           children: <Widget>[
-            new RaisedButton(
-              child: new Text('Login'),
+            RaisedButton(
+              child: Text('Login'),
               onPressed: _loginPressed,
             ),
-            new FlatButton(
-              child: new Text('Dont have an account? Tap here to register.'),
+            FlatButton(
+              child: Text('Dont have an account? Tap here to register.'),
               onPressed: _formChange,
             ),
-            new FlatButton(
-              child: new Text('Forgot Password?'),
+            FlatButton(
+              child: Text('Forgot Password?'),
               onPressed: _passwordReset,
             )
           ],
         ),
       );
     } else {
-      return new Container(
-        child: new Column(
+      return Container(
+        child: Column(
           children: <Widget>[
-            new RaisedButton(
-              child: new Text('Create an Account'),
+            RaisedButton(
+              child: Text('Create an Account'),
               onPressed: _createAccountPressed,
             ),
-            new FlatButton(
-              child: new Text('Have an account? Click here to login.'),
+            FlatButton(
+              child: Text('Have an account? Click here to login.'),
               onPressed: _formChange,
             )
           ],
@@ -133,8 +153,17 @@ class _LoginPageState extends State<LoginPage> {
 
   // These functions can self contain any user auth logic required, they all have access to _email and _password
 
-  void _loginPressed() {
-    print('The user wants to login with $_email and $_password');
+  void _loginPressed() async {
+    User currUser =
+        User(userName: _emailFilter.text, password: _passwordFilter.text);
+    var response = await login(currUser);
+
+    if (response == true) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SecondRoute(loggedInUser)),
+      );
+    }
   }
 
   void _createAccountPressed() {
@@ -143,5 +172,25 @@ class _LoginPageState extends State<LoginPage> {
 
   void _passwordReset() {
     print("The user wants a password reset request sent to $_email");
+  }
+}
+
+class SecondRoute extends StatelessWidget {
+  User user;
+  SecondRoute(this.user);
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Home"),
+      ),
+      body: Center(
+        child: Icon(
+          Icons.check_circle_rounded,
+          size: 80,
+          color: Colors.green,
+        ),
+      ),
+    );
   }
 }
