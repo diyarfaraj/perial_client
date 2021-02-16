@@ -40,4 +40,25 @@ class DataService {
     }
     return null;
   }
+
+  Future<bool> register(String username, String password) async {
+    try {
+      var data = {"userName": username, "password": password};
+      var response = await http.post(baseURL + 'account/register',
+          body: jsonEncode(data),
+          headers: {
+            'Content-Type': 'application/json',
+            "Accept": "application/json"
+          });
+
+      if (response.statusCode >= 200) {
+        return false;
+      }
+
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
 }

@@ -68,6 +68,12 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  Future<bool> register(User user) async {
+    var response = await DataService().register(user.userName, user.password);
+
+    return response;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -166,8 +172,17 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void _createAccountPressed() {
-    print('The user wants to create an accoutn with $_email and $_password');
+  void _createAccountPressed() async {
+    User currUser =
+        User(userName: _emailFilter.text, password: _passwordFilter.text);
+    var response = await register(currUser);
+
+    if (response == true) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SecondRoute(loggedInUser)),
+      );
+    }
   }
 
   void _passwordReset() {
