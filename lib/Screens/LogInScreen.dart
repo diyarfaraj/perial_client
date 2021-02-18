@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:perial/DataLayer/DataService.dart';
 import 'package:perial/DataLayer/Models/User.dart';
+import 'package:perial/Screens/RegisterScreen.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -70,7 +71,6 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<bool> register(User user) async {
     var response = await DataService().register(user.userName, user.password);
-
     return response;
   }
 
@@ -130,7 +130,12 @@ class _LoginPageState extends State<LoginPage> {
             ),
             FlatButton(
               child: Text('Dont have an account? Tap here to register.'),
-              onPressed: _formChange,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => RegisterScreen()),
+                );
+              },
             ),
             FlatButton(
               child: Text('Forgot Password?'),
@@ -145,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
           children: <Widget>[
             RaisedButton(
               child: Text('Create an Account'),
-              onPressed: _createAccountPressed,
+              onPressed: () {},
             ),
             FlatButton(
               child: Text('Have an account? Click here to login.'),
@@ -163,19 +168,6 @@ class _LoginPageState extends State<LoginPage> {
     User currUser =
         User(userName: _emailFilter.text, password: _passwordFilter.text);
     var response = await login(currUser);
-
-    if (response == true) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => SecondRoute(loggedInUser)),
-      );
-    }
-  }
-
-  void _createAccountPressed() async {
-    User currUser =
-        User(userName: _emailFilter.text, password: _passwordFilter.text);
-    var response = await register(currUser);
 
     if (response == true) {
       Navigator.push(
