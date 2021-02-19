@@ -19,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<User> users = [];
 
   Future<void> loadData() async {
-    var data = await Operations().getUsers(context);
+    var data = await Operations().getUsers();
     print(data);
 
     setState(() {

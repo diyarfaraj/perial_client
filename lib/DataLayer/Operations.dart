@@ -6,7 +6,7 @@ import 'package:perial/DataLayer/Models/User.dart';
 import 'DataService.dart';
 
 class Operations {
-  Future<List<User>> getUsers(BuildContext context) async {
+  Future<List<User>> getUsers() async {
     try {
       String os = await DataService.getUsers();
 
@@ -17,9 +17,7 @@ class Operations {
       return o;
     } catch (ex) {
       print('ApprovalOps.getKioskComponents() Ex: ' + ex.toString());
-    } finally {
-      //MessageBox.hideLoading(context);
-    }
+    } finally {}
 
     return new List<User>();
   }

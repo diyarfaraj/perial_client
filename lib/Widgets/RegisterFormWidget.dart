@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:perial/DataLayer/DataService.dart';
 import 'package:perial/DataLayer/Models/User.dart';
+import 'package:perial/DataLayer/Providers/UserProvider.dart';
 import 'package:perial/Screens/LogInScreen.dart';
+import 'package:provider/provider.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({Key key}) : super(key: key);
@@ -17,13 +19,27 @@ class _RegisterFormState extends State<RegisterForm> {
   final TextEditingController _passwordFilter = TextEditingController();
   User loggedInUser;
 
-  Future<bool> register(User user) async {
-    var response = await DataService().register(user.userName, user.password);
-    return response;
+  var data;
+  bool _initState = true;
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_initState) {
+      Provider.of<UserProvider>(context).getUsersProvider();
+    }
+    _initState = false;
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
+    data = Provider.of<UserProvider>(context);
+    final users = data.users;
     return Form(
       key: _formKey,
       child: Column(
@@ -79,10 +95,50 @@ class _RegisterFormState extends State<RegisterForm> {
               const Spacer(),
               OutlineButton(
                 highlightedBorderColor: Colors.black,
-                onPressed: _submittable() ? _submit : null,
+                onPressed: _submittable()
+                    ? () async {
+                        _formKey.currentState.validate();
+                        User currUser = User(
+                            userName: _usernameFilter.text,
+                            password: _passwordFilter.text);
+                        await Provider.of<UserProvider>(context)
+                            .registerUserProvider(currUser);
+                        //setState(() {});
+                      }
+                    : null,
                 child: const Text('Register'),
               ),
             ],
+          ),
+          SizedBox(
+            height: 30,
+          ),
+          Center(
+            child: Container(
+              height: 400,
+              child: users.length > 0
+                  ? ListView.builder(
+                      itemCount: users.length,
+                      itemBuilder: (context, index) {
+                        return Center(
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    users[index].userName,
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        );
+                      },
+                    )
+                  : Center(child: Text("no users here")),
+            ),
           ),
         ],
       ),
@@ -93,20 +149,7 @@ class _RegisterFormState extends State<RegisterForm> {
     return _agreedToTOS;
   }
 
-  void _submit() async {
-    _formKey.currentState.validate();
-
-    User currUser =
-        User(userName: _usernameFilter.text, password: _passwordFilter.text);
-    var response = await register(currUser);
-
-    if (response == true) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => SecondRoute(loggedInUser)),
-      );
-    }
-  }
+  void _submit() async {}
 
   void _setAgreedToTOS(bool newValue) {
     setState(() {

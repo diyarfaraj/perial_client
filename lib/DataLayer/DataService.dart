@@ -51,7 +51,9 @@ class DataService {
             "Accept": "application/json"
           });
 
-      if (response.statusCode >= 200) {
+      print(response);
+
+      if (response.statusCode >= 300) {
         return false;
       }
 
