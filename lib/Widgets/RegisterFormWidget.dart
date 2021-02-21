@@ -3,6 +3,7 @@ import 'package:perial/DataLayer/DataService.dart';
 import 'package:perial/DataLayer/Models/User.dart';
 import 'package:perial/DataLayer/Providers/UserProvider.dart';
 import 'package:perial/Screens/LogInScreen.dart';
+import 'package:perial/Screens/LoggedInHomeScreen.dart';
 import 'package:provider/provider.dart';
 
 class RegisterForm extends StatefulWidget {
@@ -96,14 +97,23 @@ class _RegisterFormState extends State<RegisterForm> {
               OutlineButton(
                 highlightedBorderColor: Colors.black,
                 onPressed: _submittable()
-                    ? () async {
+                    ? () {
                         _formKey.currentState.validate();
                         User currUser = User(
                             userName: _usernameFilter.text,
                             password: _passwordFilter.text);
-                        await Provider.of<UserProvider>(context)
+                        Provider.of<UserProvider>(context, listen: false)
                             .registerUserProvider(currUser);
-                        //setState(() {});
+
+                        setState(() {
+                          _usernameFilter.text = "";
+                          _passwordFilter.text = "";
+                        });
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoggedInHomeScreen()),
+                        );
                       }
                     : null,
                 child: const Text('Register'),

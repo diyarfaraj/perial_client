@@ -5,12 +5,17 @@ import 'package:perial/DataLayer/Operations.dart';
 import '../DataService.dart';
 
 class UserProvider with ChangeNotifier {
-  List<User> users = List<User>();
+  List<User> _users = [];
+  User currentLoggedinUser;
   bool loading = false;
+
+  List<User> get users {
+    return [..._users];
+  }
 
   getUsersProvider() async {
     loading = true;
-    users = await Operations().getUsers();
+    _users = await Operations().getUsers();
     loading = false;
     notifyListeners();
   }
@@ -19,6 +24,9 @@ class UserProvider with ChangeNotifier {
     loading = true;
     await DataService().register(user.userName, user.password);
     notifyListeners();
+    await getUsersProvider();
     loading = false;
   }
+
+  getLoggedInUser() async {}
 }

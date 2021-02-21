@@ -5,6 +5,8 @@ import 'package:perial/DataLayer/DataService.dart';
 import 'package:perial/DataLayer/Models/User.dart';
 import 'package:perial/Screens/RegisterScreen.dart';
 
+import 'LoggedInHomeScreen.dart';
+
 class LoginPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _LoginPageState();
@@ -77,7 +79,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildBar(context),
       body: Container(
         padding: EdgeInsets.all(16.0),
         child: Column(
@@ -172,7 +173,7 @@ class _LoginPageState extends State<LoginPage> {
     if (response == true) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => SecondRoute(loggedInUser)),
+        MaterialPageRoute(builder: (context) => LoggedInHomeScreen()),
       );
     }
   }
@@ -192,10 +193,15 @@ class SecondRoute extends StatelessWidget {
         title: Text("Home"),
       ),
       body: Center(
-        child: Icon(
-          Icons.check_circle_rounded,
-          size: 80,
-          color: Colors.green,
+        child: Column(
+          children: [
+            Icon(
+              Icons.check_circle_rounded,
+              size: 80,
+              color: Colors.green,
+            ),
+            Text("welcome user: " + user.userName)
+          ],
         ),
       ),
     );

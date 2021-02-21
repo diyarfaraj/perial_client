@@ -32,18 +32,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("test user"),
-        ),
-        body:
-            LoginPage() /* Center(
-        child: ListView.builder(
-          itemCount: users.length,
-          itemBuilder: (context, index) {
-            return Text(users[index].userName);
-          },
-        ),
-      ), */
-        );
+      appBar: AppBar(
+        title: Text("test user"),
+      ),
+      body: LoginPage(),
+    );
   }
 }
