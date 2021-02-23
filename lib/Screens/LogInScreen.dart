@@ -58,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<bool> login(User user) async {
     var response = await DataService().login(user.userName, user.password);
-
+    print(response);
     if (response.statusCode == 200) {
       setState(() {
         loggedIn = true;

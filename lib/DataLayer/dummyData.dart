@@ -32,7 +32,7 @@ final dummyUsers = [
   ),
   DUser(
     name: 'Benji',
-    designation: 'beeing funny',
+    designation: 'mr funny guy',
     mutualFriends: 8,
     bio:
         'Psychology, science, and art are what helps me to learn the outside world and myself.',

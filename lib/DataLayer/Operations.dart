@@ -8,7 +8,7 @@ import 'DataService.dart';
 class Operations {
   Future<List<User>> getUsers() async {
     try {
-      String os = await DataService.getUsers();
+      String os = await DataService().getUsers();
 
       if ([null, ""].contains(os)) return new List<User>();
 

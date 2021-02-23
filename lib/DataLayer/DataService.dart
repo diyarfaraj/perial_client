@@ -6,11 +6,11 @@ import 'package:http/http.dart' as http;
 import 'package:perial/DataLayer/Models/User.dart';
 
 class DataService {
-  var baseURL = "http://192.168.0.22:53736/api/";
+  var baseURL = "http://192.168.0.22:53736/";
 
-  static Future<String> getUsers() async {
+  Future<String> getUsers() async {
     try {
-      var response = await http.get("http://192.168.0.22:53736/api/users");
+      var response = await http.get(baseURL + 'api/users');
 
       if ((response.statusCode >= 200)) {
         return response.body;
@@ -58,5 +58,9 @@ class DataService {
       return null;
     }
     return null;
+  }
+
+  Future<void> get404Error() {
+    try {} catch (e) {}
   }
 }

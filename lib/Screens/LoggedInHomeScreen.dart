@@ -23,7 +23,7 @@ class _LoggedInHomeScreenState extends State<LoggedInHomeScreen> {
           child: Column(
             children: [
               users.isEmpty
-                  ? Text('No more users')
+                  ? Text('No more dogs')
                   : Stack(children: users.map(buildUser).toList()),
               Expanded(child: Container()),
               BottomButtonsWidget()
