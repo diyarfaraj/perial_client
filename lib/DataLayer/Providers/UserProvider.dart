@@ -4,7 +4,7 @@ import 'package:perial/DataLayer/Operations.dart';
 
 import '../DataService.dart';
 
-class UserProvider with ChangeNotifier {
+class UserProvider extends ChangeNotifier {
   List<User> _users = [];
   User currentLoggedinUser;
   bool loading = false;
