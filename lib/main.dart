@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+//import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:perial/DataLayer/Providers/UserProvider.dart';
 import 'package:perial/DataLayer/Providers/feedback_position_provider.dart';
 import 'package:perial/Screens/HomeScreen.dart';
 import 'package:provider/provider.dart';
+//import 'package:riverpod/riverpod.dart';
 
 void main() {
   runApp(
@@ -14,6 +16,7 @@ void main() {
       child: MyApp(),
     ),
   );
+  /* ProviderScope(child: MyApp())); */
 }
 
 class MyApp extends StatelessWidget {
