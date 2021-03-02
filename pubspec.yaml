@@ -26,6 +26,7 @@ dependencies:
   provider: ^4.3.3
   http: ^0.12.1
   font_awesome_flutter: ^8.11.0
+  flutter_secure_storage: ^3.3.5
   flutter_riverpod: ^0.12.4
 
 

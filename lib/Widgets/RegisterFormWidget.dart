@@ -33,7 +33,6 @@ class _RegisterFormState extends State<RegisterForm> {
       Provider.of<UserProvider>(context).getUsersProvider();
     }
     _initState = false;
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
 

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:developer';
 import 'dart:io';
 
@@ -10,7 +11,10 @@ class DataService {
 
   Future<String> getUsers() async {
     try {
-      var response = await http.get(baseURL + 'users');
+      var response = await http.get(baseURL + 'users', headers: {
+        HttpHeaders.authorizationHeader:
+            'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJob3VzZSIsIm5iZiI6MTYxNDYzNTgyNSwiZXhwIjoxNjE1MjQwNjI1LCJpYXQiOjE2MTQ2MzU4MjV9.4m7SU2Ss_UUeLkI-FK7YOd-Eq9CgQiGPPwzVrvdK23MUUbsloauK2hwsGl5YACSKUyaGJz6RxCfOJ0fFuKcyhw'
+      });
 
       if ((response.statusCode >= 200)) {
         return response.body;
