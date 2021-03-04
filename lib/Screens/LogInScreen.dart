@@ -1,10 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:perial/DataLayer/DataService.dart';
 import 'package:perial/DataLayer/Models/User.dart';
 import 'package:perial/Screens/RegisterScreen.dart';
-
 import 'LoggedInHomeScreen.dart';
 
 class LoginPage extends StatefulWidget {

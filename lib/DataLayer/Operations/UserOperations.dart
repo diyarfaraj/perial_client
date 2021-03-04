@@ -1,11 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:perial/DataLayer/Models/User.dart';
+import 'package:perial/DataLayer/Models/Member.dart';
 
-import 'DataService.dart';
+import '../DataService.dart';
+import '../Models/User.dart';
 
-class Operations {
+class UserOperations {
   Future<List<User>> getUsers() async {
     try {
       String os = await DataService().getUsers();

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:perial/DataLayer/Providers/MemberProvider.dart';
 //import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:perial/DataLayer/Providers/UserProvider.dart';
 import 'package:perial/DataLayer/Providers/feedback_position_provider.dart';
@@ -11,6 +12,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => MemberProvider()),
         ChangeNotifierProvider(create: (_) => FeedbackPositionProvider())
       ],
       child: MyApp(),

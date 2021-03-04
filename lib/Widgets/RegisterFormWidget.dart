@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:perial/DataLayer/DataService.dart';
+import 'package:perial/DataLayer/Models/Member.dart';
 import 'package:perial/DataLayer/Models/User.dart';
+import 'package:perial/DataLayer/Providers/MemberProvider.dart';
 import 'package:perial/DataLayer/Providers/UserProvider.dart';
 import 'package:perial/Screens/LogInScreen.dart';
 import 'package:perial/Screens/LoggedInHomeScreen.dart';
@@ -30,7 +32,7 @@ class _RegisterFormState extends State<RegisterForm> {
   @override
   void didChangeDependencies() {
     if (_initState) {
-      Provider.of<UserProvider>(context).getUsersProvider();
+      Provider.of<MemberProvider>(context).getMembersProvider();
     }
     _initState = false;
     super.didChangeDependencies();
@@ -38,8 +40,8 @@ class _RegisterFormState extends State<RegisterForm> {
 
   @override
   Widget build(BuildContext context) {
-    data = Provider.of<UserProvider>(context);
-    final users = data.users;
+    data = Provider.of<MemberProvider>(context);
+    final members = data.members;
     return Form(
       key: _formKey,
       child: Column(
@@ -125,9 +127,9 @@ class _RegisterFormState extends State<RegisterForm> {
           Center(
             child: Container(
               height: 400,
-              child: users.length > 0
+              child: members.length > 0
                   ? ListView.builder(
-                      itemCount: users.length,
+                      itemCount: members.length,
                       itemBuilder: (context, index) {
                         return Center(
                           child: Column(
@@ -136,7 +138,7 @@ class _RegisterFormState extends State<RegisterForm> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    users[index].userName,
+                                    members[index].userName,
                                     style: TextStyle(color: Colors.red),
                                   ),
                                 ],

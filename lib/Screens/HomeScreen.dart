@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:perial/DataLayer/Models/Member.dart';
 import 'package:perial/DataLayer/Models/User.dart';
-import 'package:perial/DataLayer/Operations.dart';
+import 'package:perial/DataLayer/Operations/UserOperations.dart';
 import 'package:perial/Screens/LogInScreen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,20 +14,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    loadData();
-  }
-
-  List<User> users = [];
-
-  Future<void> loadData() async {
-    var data = await Operations().getUsers();
-    print(data);
-
-    setState(() {
-      users = data;
-    });
-
-    print(users);
   }
 
   @override
