@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:perial/DataLayer/Models/DUsers.dart';
+import 'package:perial/DataLayer/Models/Member.dart';
 import 'package:perial/DataLayer/Providers/feedback_position_provider.dart';
 import 'package:provider/provider.dart';
 
 class UserCardWidget extends StatelessWidget {
-  final DUser user;
+  final Member member;
   final bool isUserInFocus;
 
   const UserCardWidget({
-    @required this.user,
+    @required this.member,
     @required this.isUserInFocus,
     Key key,
   }) : super(key: key);
@@ -25,7 +26,7 @@ class UserCardWidget extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         image: DecorationImage(
-          image: AssetImage(user.imgUrl),
+          image: NetworkImage(member.photoUrl),
           fit: BoxFit.cover,
         ),
       ),
@@ -52,7 +53,7 @@ class UserCardWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  buildUserInfo(user: user),
+                  buildUserInfo(member: member),
                   Padding(
                     padding: EdgeInsets.only(bottom: 16, right: 8),
                     child: Icon(Icons.info, color: Colors.white),
@@ -100,14 +101,14 @@ class UserCardWidget extends StatelessWidget {
     }
   }
 
-  Widget buildUserInfo({@required DUser user}) => Padding(
+  Widget buildUserInfo({@required Member member}) => Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              '${user.name}, ${user.age}',
+              '${member.userName}, ${member.age}',
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -116,14 +117,14 @@ class UserCardWidget extends StatelessWidget {
             ),
             SizedBox(height: 8),
             Text(
-              user.designation,
+              member.city,
               style: TextStyle(color: Colors.white),
             ),
             SizedBox(height: 4),
-            Text(
+            /* Text(
               '${user.mutualFriends} Mutual Friends',
               style: TextStyle(color: Colors.white),
-            )
+            ) */
           ],
         ),
       );

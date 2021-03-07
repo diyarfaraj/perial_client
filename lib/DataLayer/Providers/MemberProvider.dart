@@ -1,10 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:perial/DataLayer/Models/Member.dart';
-import 'package:perial/DataLayer/Models/User.dart';
 import 'package:perial/DataLayer/Operations/MemberOperations.dart';
-import 'package:perial/DataLayer/Operations/UserOperations.dart';
-
-import '../DataService.dart';
 
 class MemberProvider extends ChangeNotifier {
   List<Member> _members = [];
@@ -28,6 +24,4 @@ class MemberProvider extends ChangeNotifier {
     notifyListeners();
     loading = false;
   }
-
-  getLoggedInUser() async {}
 }

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:perial/DataLayer/DataService.dart';
-import 'package:perial/DataLayer/Models/User.dart';
+import 'package:perial/DataLayer/Models/CurrentUser.dart';
 import 'package:perial/Screens/RegisterScreen.dart';
 import 'LoggedInHomeScreen.dart';
 
@@ -21,7 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   FormType _form = FormType
       .login; // our default setting is to login, and we should switch to creating an account when the user chooses to
   bool loggedIn = false;
-  User loggedInUser;
+  CurrentUser loggedInUser;
   _LoginPageState() {
     _emailFilter.addListener(_emailListen);
     _passwordFilter.addListener(_passwordListen);
@@ -54,23 +54,23 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  Future<bool> login(User user) async {
-    var response = await DataService().login(user.userName, user.password);
+  Future<bool> login(CurrentUser user) async {
+    var response = await DataService().login(user.username, user.password);
     print(response);
     if (response.statusCode == 200) {
       setState(() {
         loggedIn = true;
-        loggedInUser = User.fromJson(jsonDecode(response.body));
+        loggedInUser = CurrentUser.fromJson(jsonDecode(response.body));
       });
-      print(loggedInUser.userName);
+      print(loggedInUser.username);
       return true;
     } else {
       return false;
     }
   }
 
-  Future<bool> register(User user) async {
-    var response = await DataService().register(user.userName, user.password);
+  Future<bool> register(CurrentUser user) async {
+    var response = await DataService().register(user.username, user.password);
     return response;
   }
 
@@ -164,13 +164,14 @@ class _LoginPageState extends State<LoginPage> {
   // These functions can self contain any user auth logic required, they all have access to _email and _password
 
   void _loginPressed() async {
-    User currUser =
-        User(userName: _emailFilter.text, password: _passwordFilter.text);
+    CurrentUser currUser = CurrentUser(
+        username: _emailFilter.text, password: _passwordFilter.text);
     var response = await login(currUser);
 
     if (response == true) {
       Navigator.push(
         context,
+        //MaterialPageRoute(builder: (context) => SecondRoute(currUser)),
         MaterialPageRoute(builder: (context) => LoggedInHomeScreen()),
       );
     }
@@ -182,8 +183,9 @@ class _LoginPageState extends State<LoginPage> {
 }
 
 class SecondRoute extends StatelessWidget {
-  User user;
+  CurrentUser user;
   SecondRoute(this.user);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -198,7 +200,17 @@ class SecondRoute extends StatelessWidget {
               size: 80,
               color: Colors.green,
             ),
-            Text("welcome user: " + user.userName)
+            Text("welcome user: " + user.username),
+            Text("these uses has liked you: "),
+            FlatButton(
+              child: Text('Dont have an account? Tap here to register.'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => RegisterScreen()),
+                );
+              },
+            ),
           ],
         ),
       ),

@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:perial/DataLayer/DataService.dart';
 import 'package:perial/DataLayer/Models/DUsers.dart';
+import 'package:perial/DataLayer/Models/Member.dart';
+import 'package:perial/DataLayer/Models/UserLike.dart';
+import 'package:perial/DataLayer/Operations/LikesOperations.dart';
+import 'package:perial/DataLayer/Operations/MemberOperations.dart';
+import 'package:perial/DataLayer/Providers/LikesProvider.dart';
+import 'package:perial/DataLayer/Providers/MemberProvider.dart';
 import 'package:perial/DataLayer/Providers/feedback_position_provider.dart';
+import 'package:perial/Screens/RegisterScreen.dart';
 import 'package:perial/Widgets/bottom_buttons_widget.dart';
 import 'package:perial/Widgets/user_card_widget.dart';
 import 'package:provider/provider.dart';
@@ -13,24 +21,69 @@ class LoggedInHomeScreen extends StatefulWidget {
 }
 
 class _LoggedInHomeScreenState extends State<LoggedInHomeScreen> {
-  final List<DUser> users = dummyUsers;
+  List<Member> members = [];
+  List<UserLike> likedUsers = [];
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: buildAppBar(),
-        body: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            children: [
-              users.isEmpty
-                  ? Text('No more dogs')
-                  : Stack(children: users.map(buildUser).toList()),
-              Expanded(child: Container()),
-              BottomButtonsWidget()
-            ],
-          ),
+  void initState() {
+    super.initState();
+    getMembers();
+    getLikes("liked");
+  }
+
+  Future<void> getMembers() async {
+    var data = await MemberOperations().getMembers();
+    setState(() {
+      members = _getUniqueList(likedUsers, data);
+    });
+  }
+
+  Future<void> getLikes(String command) async {
+    var data = await LikesOperations().getLikes(command);
+    setState(() {
+      likedUsers = data;
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: buildAppBar(),
+      body: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            members.isEmpty
+                ? Text('No more dogs')
+                : Stack(children: members.map(buildUser).toList()),
+            Expanded(child: Container()),
+            BottomButtonsWidget()
+          ],
         ),
-      );
+      ),
+    );
+  }
+
+  List<Member> _getUniqueList(List<UserLike> likedUsers, List<Member> members) {
+    List<Member> uniqueListMember = [];
+    for (var member in members) {
+      bool match = false;
+      for (var likedUser in likedUsers) {
+        if (member.userName == likedUser.username) {
+          match = true;
+          break;
+        }
+      }
+      if (!match) uniqueListMember.add(member);
+    }
+    return uniqueListMember;
+  }
 
   Widget buildAppBar() => AppBar(
         centerTitle: true,
@@ -44,9 +97,9 @@ class _LoggedInHomeScreenState extends State<LoggedInHomeScreen> {
         title: FaIcon(FontAwesomeIcons.paw, color: Colors.deepOrange),
       );
 
-  Widget buildUser(DUser user) {
-    final userIndex = users.indexOf(user);
-    final isUserInFocus = userIndex == users.length - 1;
+  Widget buildUser(Member member) {
+    final userIndex = members.indexOf(member);
+    final isUserInFocus = userIndex == members.length - 1;
 
     return Listener(
       onPointerMove: (pointerEvent) {
@@ -65,29 +118,26 @@ class _LoggedInHomeScreenState extends State<LoggedInHomeScreen> {
         provider.resetPosition();
       },
       child: Draggable(
-        child: UserCardWidget(user: user, isUserInFocus: isUserInFocus),
+        child: UserCardWidget(member: member, isUserInFocus: isUserInFocus),
         feedback: Material(
           type: MaterialType.transparency,
-          child: UserCardWidget(user: user, isUserInFocus: isUserInFocus),
+          child: UserCardWidget(member: member, isUserInFocus: isUserInFocus),
         ),
         childWhenDragging: Container(),
-        onDragEnd: (details) => onDragEnd(details, user),
+        onDragEnd: (details) => onDragEnd(details, member),
       ),
     );
   }
 
-  void onDragEnd(DraggableDetails details, DUser user) {
+  Future<void> onDragEnd(DraggableDetails details, Member member) async {
     final minimumDrag = 100;
     if (details.offset.dx > minimumDrag) {
-      user.isSwipedOff = true;
-      print("right swipe on user: " + user.name);
-      print(details.offset.dx);
-      setState(() => users.remove(user));
+      await LikesOperations().addLike(member.userName);
+      await getLikes("liked");
+      await getMembers();
+      setState(() => members.remove(member));
     } else if (details.offset.dx < -minimumDrag) {
-      user.isLiked = true;
-      print("left swipe on user: " + user.name);
-      print(details.offset.dx);
-      setState(() => users.remove(user));
+      setState(() => members.remove(member));
     }
   }
 }

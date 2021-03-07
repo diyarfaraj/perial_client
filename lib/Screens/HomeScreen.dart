@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:perial/DataLayer/Models/Member.dart';
-import 'package:perial/DataLayer/Models/User.dart';
+import 'package:perial/DataLayer/Models/CurrentUser.dart';
 import 'package:perial/DataLayer/Operations/UserOperations.dart';
 import 'package:perial/Screens/LogInScreen.dart';
 

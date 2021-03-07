@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:perial/DataLayer/Providers/LikesProvider.dart';
 import 'package:perial/DataLayer/Providers/MemberProvider.dart';
 //import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:perial/DataLayer/Providers/UserProvider.dart';
@@ -13,7 +14,8 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => MemberProvider()),
-        ChangeNotifierProvider(create: (_) => FeedbackPositionProvider())
+        ChangeNotifierProvider(create: (_) => FeedbackPositionProvider()),
+        ChangeNotifierProvider(create: (_) => LikesProvider()),
       ],
       child: MyApp(),
     ),

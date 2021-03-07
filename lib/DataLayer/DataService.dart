@@ -2,59 +2,14 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:perial/DataLayer/Models/CurrentUser.dart';
+import 'package:perial/DataLayer/Models/UserLike.dart';
 
 final storage = FlutterSecureStorage();
+CurrentUser currentUser;
 
 class DataService {
   var baseURL = "http://192.168.0.22:53736/api/";
-
-  Future<String> getMembers() async {
-    try {
-      var response = await http.get(baseURL + 'users', headers: {
-        HttpHeaders.authorizationHeader:
-            'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJob3VzZSIsIm5iZiI6MTYxNDYzNTgyNSwiZXhwIjoxNjE1MjQwNjI1LCJpYXQiOjE2MTQ2MzU4MjV9.4m7SU2Ss_UUeLkI-FK7YOd-Eq9CgQiGPPwzVrvdK23MUUbsloauK2hwsGl5YACSKUyaGJz6RxCfOJ0fFuKcyhw'
-      });
-      if ((response.statusCode >= 200 && response.statusCode <= 300)) {
-        return response.body;
-      }
-      return null;
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
-  }
-
-  Future<String> getMember(String username) async {
-    try {
-      var response = await http.get(baseURL + 'user/' + username, headers: {
-        HttpHeaders.authorizationHeader:
-            'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJob3VzZSIsIm5iZiI6MTYxNDYzNTgyNSwiZXhwIjoxNjE1MjQwNjI1LCJpYXQiOjE2MTQ2MzU4MjV9.4m7SU2Ss_UUeLkI-FK7YOd-Eq9CgQiGPPwzVrvdK23MUUbsloauK2hwsGl5YACSKUyaGJz6RxCfOJ0fFuKcyhw'
-      });
-      if ((response.statusCode >= 200 && response.statusCode <= 300)) {
-        return response.body;
-      }
-      return null;
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
-  }
-
-  Future<String> getUsers() async {
-    try {
-      var response = await http.get(baseURL + 'users', headers: {
-        HttpHeaders.authorizationHeader:
-            'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJob3VzZSIsIm5iZiI6MTYxNDYzNTgyNSwiZXhwIjoxNjE1MjQwNjI1LCJpYXQiOjE2MTQ2MzU4MjV9.4m7SU2Ss_UUeLkI-FK7YOd-Eq9CgQiGPPwzVrvdK23MUUbsloauK2hwsGl5YACSKUyaGJz6RxCfOJ0fFuKcyhw'
-      });
-      if ((response.statusCode >= 200 && response.statusCode <= 300)) {
-        return response.body;
-      }
-      return null;
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
-  }
 
   Future<bool> register(String username, String password) async {
     try {
@@ -86,6 +41,7 @@ class DataService {
             "Accept": "application/json"
           });
       if (response.statusCode == 200) {
+        currentUser = CurrentUser.fromJson(jsonDecode(response.body));
         return response;
       }
     } catch (e) {
@@ -93,6 +49,82 @@ class DataService {
       return null;
     }
     return null;
+  }
+
+  Future<String> getMembers() async {
+    try {
+      var response = await http.get(baseURL + 'users', headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ' + currentUser.token
+      });
+      if ((response.statusCode >= 200 && response.statusCode <= 300)) {
+        return response.body;
+      }
+      return null;
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
+  Future<String> getMember(String username) async {
+    try {
+      var response = await http.get(baseURL + 'user/' + username, headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ' + currentUser.token
+      });
+      if ((response.statusCode >= 200 && response.statusCode <= 300)) {
+        return response.body;
+      }
+      return null;
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
+  Future<String> getUsers() async {
+    try {
+      var response = await http.get(baseURL + 'users', headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ' + currentUser.token
+      });
+      if ((response.statusCode >= 200 && response.statusCode <= 300)) {
+        return response.body;
+      }
+      return null;
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
+  Future<bool> addLike(String username) async {
+    try {
+      var response = await http.post(baseURL + 'likes/' + username, headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ' + currentUser.token
+      });
+      if (response.statusCode == 200) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
+  Future<String> getLikes(String command) async {
+    try {
+      var response = await http.get(baseURL + 'likes?predicate=' + command,
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer ' + currentUser.token
+          });
+      if ((response.statusCode >= 200 && response.statusCode <= 300)) {
+        return response.body;
+      }
+      return null;
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
   }
 
   Future<void> get404Error() {

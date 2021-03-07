@@ -1,16 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:perial/DataLayer/Models/Member.dart';
-import 'package:perial/DataLayer/Models/User.dart';
+import 'package:perial/DataLayer/Models/CurrentUser.dart';
 import 'package:perial/DataLayer/Operations/UserOperations.dart';
 
 import '../DataService.dart';
 
 class UserProvider extends ChangeNotifier {
-  List<User> _users = [];
-  User currentLoggedinUser;
+  List<CurrentUser> _users = [];
+  CurrentUser currentLoggedinUser;
   bool loading = false;
 
-  List<User> get users {
+  List<CurrentUser> get users {
     return [..._users];
   }
 
@@ -21,9 +21,9 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  registerUserProvider(User user) async {
+  registerUserProvider(CurrentUser user) async {
     loading = true;
-    await DataService().register(user.userName, user.password);
+    await DataService().register(user.username, user.password);
     notifyListeners();
     await getUsersProvider();
     loading = false;

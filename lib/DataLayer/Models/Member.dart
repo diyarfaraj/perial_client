@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:perial/DataLayer/Models/Photo.dart';
+import 'package:perial/DataLayer/Models/UserLike.dart';
 
 Member userFromJson(String str) => Member.fromJson(json.decode(str));
 
@@ -54,21 +55,22 @@ class Member {
   //todo:
 
   factory Member.fromJson(Map<String, dynamic> json) => Member(
-      id: json["id"],
-      userName: json["username"],
-      photoUrl: json["photoUrl"],
-      age: json["age"],
-      email: json["email"],
-      createdAt: DateTime.parse(json["created"]),
-      lastActive: DateTime.parse(json["lastActive"]),
-      gender: json["gender"],
-      introduction: json["introduction"],
-      animalType: json["animalType"],
-      lookingFor: json["lookingFor"],
-      interests: json["interests"],
-      city: json["city"],
-      country: json["country"],
-      photos: Photo.parseList(json["photos"]));
+        id: json["id"],
+        userName: json["username"],
+        photoUrl: json["photoUrl"],
+        age: json["age"],
+        email: json["email"],
+        createdAt: DateTime.parse(json["created"]),
+        lastActive: DateTime.parse(json["lastActive"]),
+        gender: json["gender"],
+        introduction: json["introduction"],
+        animalType: json["animalType"],
+        lookingFor: json["lookingFor"],
+        interests: json["interests"],
+        city: json["city"],
+        country: json["country"],
+        photos: Photo.parseList(json["photos"]),
+      );
 
   Map<String, dynamic> toJson() => {
         "Id": id,

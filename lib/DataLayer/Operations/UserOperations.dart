@@ -4,22 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:perial/DataLayer/Models/Member.dart';
 
 import '../DataService.dart';
-import '../Models/User.dart';
+import '../Models/CurrentUser.dart';
 
 class UserOperations {
-  Future<List<User>> getUsers() async {
+  Future<List<CurrentUser>> getUsers() async {
     try {
       String os = await DataService().getUsers();
 
-      if ([null, ""].contains(os)) return new List<User>();
+      if ([null, ""].contains(os)) return new List<CurrentUser>();
 
-      List<User> o = User.parseList(json.decode(os));
+      List<CurrentUser> o = CurrentUser.parseList(json.decode(os));
 
       return o;
     } catch (ex) {
       print('ApprovalOps.getKioskComponents() Ex: ' + ex.toString());
     } finally {}
 
-    return new List<User>();
+    return new List<CurrentUser>();
   }
 }
