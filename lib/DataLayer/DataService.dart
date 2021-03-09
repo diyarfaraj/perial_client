@@ -51,6 +51,10 @@ class DataService {
     return null;
   }
 
+  CurrentUser getCurrentUser() {
+    return currentUser;
+  }
+
   Future<String> getMembers() async {
     try {
       var response = await http.get(baseURL + 'users', headers: {

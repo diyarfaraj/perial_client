@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:perial/DataLayer/Models/CurrentUser.dart';
 import 'package:perial/DataLayer/Models/Member.dart';
 import '../DataService.dart';
 
@@ -9,6 +10,11 @@ class MemberOperations {
       String os = await DataService().getMembers();
       if ([null, ""].contains(os)) return new List<Member>();
       List<Member> o = Member.parseList(json.decode(os));
+      //exclude loggedin user from members list
+      o = o
+          .where((element) =>
+              element.userName != DataService().getCurrentUser().username)
+          .toList();
       return o;
     } catch (ex) {
       print('MemeberOperations.getMembers() Ex: ' + ex.toString());

@@ -28,10 +28,10 @@ class _LoggedInHomeScreenState extends State<LoggedInHomeScreen> {
   void initState() {
     super.initState();
     getMembers();
-    getLikes("liked");
   }
 
   Future<void> getMembers() async {
+    await getLikes("liked");
     var data = await MemberOperations().getMembers();
     setState(() {
       members = _getUniqueList(likedUsers, data);
@@ -47,7 +47,6 @@ class _LoggedInHomeScreenState extends State<LoggedInHomeScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
@@ -129,13 +128,13 @@ class _LoggedInHomeScreenState extends State<LoggedInHomeScreen> {
     );
   }
 
+//todo: make dislike in api and call it here
   Future<void> onDragEnd(DraggableDetails details, Member member) async {
     final minimumDrag = 100;
     if (details.offset.dx > minimumDrag) {
-      await LikesOperations().addLike(member.userName);
-      await getLikes("liked");
-      await getMembers();
       setState(() => members.remove(member));
+      await LikesOperations().addLike(member.userName);
+      await getMembers();
     } else if (details.offset.dx < -minimumDrag) {
       setState(() => members.remove(member));
     }
