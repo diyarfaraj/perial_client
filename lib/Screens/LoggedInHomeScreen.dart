@@ -59,7 +59,17 @@ class _LoggedInHomeScreenState extends State<LoggedInHomeScreen> {
         child: Column(
           children: [
             members.isEmpty
-                ? Text('No more dogs')
+                ? Column(
+                    children: [
+                      Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text('Looking for that special dog...'),
+                    ],
+                  )
                 : Stack(children: members.map(buildUser).toList()),
             Expanded(child: Container()),
             BottomButtonsWidget()
@@ -68,6 +78,20 @@ class _LoggedInHomeScreenState extends State<LoggedInHomeScreen> {
       ),
     );
   }
+
+//https://programmer.group/flutter-learning-notes-17-top-navigation-tabbar-tabbarview-default-tabcontroller.html
+  List<Tab> _myTabs = <Tab>[
+    Tab(
+      icon: Icon(Icons.chat, color: Colors.grey),
+      child: Stack(children: members.map(buildUser).toList()),
+    ),
+    Tab(
+      icon: Icon(FontAwesomeIcons.dog, color: Colors.grey),
+    ),
+    Tab(
+      icon: FaIcon(FontAwesomeIcons.paw, color: Colors.deepOrange),
+    )
+  ];
 
   List<Member> _getUniqueList(List<UserLike> likedUsers, List<Member> members) {
     List<Member> uniqueListMember = [];
@@ -92,14 +116,15 @@ class _LoggedInHomeScreenState extends State<LoggedInHomeScreen> {
           Icon(Icons.chat, color: Colors.grey),
           SizedBox(width: 16),
         ],
-        leading: Icon(FontAwesomeIcons.dog, color: Colors.grey),
+        leading: GestureDetector(
+            onTap: () {},
+            child: Icon(FontAwesomeIcons.dog, color: Colors.grey)),
         title: FaIcon(FontAwesomeIcons.paw, color: Colors.deepOrange),
       );
 
   Widget buildUser(Member member) {
     final userIndex = members.indexOf(member);
     final isUserInFocus = userIndex == members.length - 1;
-
     return Listener(
       onPointerMove: (pointerEvent) {
         final provider =
