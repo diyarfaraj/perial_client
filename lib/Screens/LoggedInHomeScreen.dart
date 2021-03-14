@@ -20,14 +20,22 @@ class LoggedInHomeScreen extends StatefulWidget {
   _LoggedInHomeScreenState createState() => _LoggedInHomeScreenState();
 }
 
-class _LoggedInHomeScreenState extends State<LoggedInHomeScreen> {
+class _LoggedInHomeScreenState extends State<LoggedInHomeScreen>
+    with TickerProviderStateMixin {
   List<Member> members = [];
   List<UserLike> likedUsers = [];
+  TabController _tabController;
 
   @override
   void initState() {
     super.initState();
     getMembers();
+    _tabController = new TabController(vsync: this, length: 3);
+    _tabController.addListener(_handleTabSelection);
+  }
+
+  void _handleTabSelection() {
+    setState(() {});
   }
 
   Future<void> getMembers() async {
@@ -53,45 +61,47 @@ class _LoggedInHomeScreenState extends State<LoggedInHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(),
-      body: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          children: [
-            members.isEmpty
-                ? Column(
-                    children: [
-                      Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Text('Looking for that special dog...'),
-                    ],
-                  )
-                : Stack(children: members.map(buildUser).toList()),
-            Expanded(child: Container()),
-            BottomButtonsWidget()
-          ],
+      body: DefaultTabController(
+        length: 3,
+        child: Scaffold(
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(60),
+            child: AppBar(
+              elevation: 0,
+              backgroundColor: Colors.white,
+              leading: Container(),
+              bottom: TabBar(
+                controller: _tabController,
+                indicatorColor: Colors.white,
+                tabs: [
+                  Tab(
+                      child: Icon(FontAwesomeIcons.dog,
+                          color: _tabController.index == 0
+                              ? Colors.deepOrange
+                              : Colors.grey)),
+                  Tab(
+                      child: FaIcon(FontAwesomeIcons.paw,
+                          color: _tabController.index == 1
+                              ? Colors.deepOrange
+                              : Colors.grey)),
+                  Tab(
+                    child: Icon(Icons.chat,
+                        color: _tabController.index == 2
+                            ? Colors.deepOrange
+                            : Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          body: TabBarView(
+            controller: _tabController,
+            children: [_profilePage(), _swipePage(), _chattPage()],
+          ),
         ),
       ),
     );
   }
-
-//https://programmer.group/flutter-learning-notes-17-top-navigation-tabbar-tabbarview-default-tabcontroller.html
-  List<Tab> _myTabs = <Tab>[
-    Tab(
-      icon: Icon(Icons.chat, color: Colors.grey),
-      child: Stack(children: members.map(buildUser).toList()),
-    ),
-    Tab(
-      icon: Icon(FontAwesomeIcons.dog, color: Colors.grey),
-    ),
-    Tab(
-      icon: FaIcon(FontAwesomeIcons.paw, color: Colors.deepOrange),
-    )
-  ];
 
   List<Member> _getUniqueList(List<UserLike> likedUsers, List<Member> members) {
     List<Member> uniqueListMember = [];
@@ -106,6 +116,39 @@ class _LoggedInHomeScreenState extends State<LoggedInHomeScreen> {
       if (!match) uniqueListMember.add(member);
     }
     return uniqueListMember;
+  }
+
+  Widget _swipePage() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          members.isEmpty
+              ? Column(
+                  children: [
+                    Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text('Looking for that special dog...'),
+                  ],
+                )
+              : Stack(children: members.map(buildUser).toList()),
+          Expanded(child: Container()),
+          BottomButtonsWidget()
+        ],
+      ),
+    );
+  }
+
+  Widget _profilePage() {
+    return Text("profile");
+  }
+
+  Widget _chattPage() {
+    return Text("chatt");
   }
 
   Widget buildAppBar() => AppBar(
