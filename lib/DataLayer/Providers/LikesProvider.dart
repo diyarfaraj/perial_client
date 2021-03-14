@@ -33,6 +33,6 @@ class LikesProvider extends ChangeNotifier {
     _likedBy = await LikesOperations().getLikes("likedBy");
     notifyListeners();
     loading = false;
-    return likedBy;
+    return _likedBy;
   }
 }

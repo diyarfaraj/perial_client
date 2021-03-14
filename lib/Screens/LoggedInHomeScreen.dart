@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:perial/DataLayer/DataService.dart';
+import 'package:perial/DataLayer/Models/CurrentUser.dart';
 import 'package:perial/DataLayer/Models/DUsers.dart';
 import 'package:perial/DataLayer/Models/Member.dart';
+import 'package:perial/DataLayer/Models/UserDislike.dart';
 import 'package:perial/DataLayer/Models/UserLike.dart';
+import 'package:perial/DataLayer/Operations/DislikesOperations.dart';
 import 'package:perial/DataLayer/Operations/LikesOperations.dart';
 import 'package:perial/DataLayer/Operations/MemberOperations.dart';
 import 'package:perial/DataLayer/Providers/LikesProvider.dart';
@@ -24,6 +27,9 @@ class _LoggedInHomeScreenState extends State<LoggedInHomeScreen>
     with TickerProviderStateMixin {
   List<Member> members = [];
   List<UserLike> likedUsers = [];
+  List<UserDislike> dislikedUsers = [];
+  Member currentUser;
+
   TabController _tabController;
 
   @override
@@ -31,6 +37,7 @@ class _LoggedInHomeScreenState extends State<LoggedInHomeScreen>
     super.initState();
     getMembers();
     _tabController = new TabController(vsync: this, length: 3);
+    _tabController.index = 1;
     _tabController.addListener(_handleTabSelection);
   }
 
@@ -40,9 +47,11 @@ class _LoggedInHomeScreenState extends State<LoggedInHomeScreen>
 
   Future<void> getMembers() async {
     await getLikes("liked");
+    await getDislikes("disliked");
     var data = await MemberOperations().getMembers();
     setState(() {
       members = _getUniqueList(likedUsers, data);
+      members = _getUniqueListFromDislikes(dislikedUsers, members);
     });
   }
 
@@ -50,6 +59,13 @@ class _LoggedInHomeScreenState extends State<LoggedInHomeScreen>
     var data = await LikesOperations().getLikes(command);
     setState(() {
       likedUsers = data;
+    });
+  }
+
+  Future<void> getDislikes(String command) async {
+    var data = await DislikesOperations().getDislikes(command);
+    setState(() {
+      dislikedUsers = data;
     });
   }
 
@@ -118,6 +134,22 @@ class _LoggedInHomeScreenState extends State<LoggedInHomeScreen>
     return uniqueListMember;
   }
 
+  List<Member> _getUniqueListFromDislikes(
+      List<UserDislike> dislikedUsers, List<Member> members) {
+    List<Member> uniqueListMember = [];
+    for (var member in members) {
+      bool match = false;
+      for (var dislikedUser in dislikedUsers) {
+        if (member.userName == dislikedUser.username) {
+          match = true;
+          break;
+        }
+      }
+      if (!match) uniqueListMember.add(member);
+    }
+    return uniqueListMember;
+  }
+
   Widget _swipePage() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -144,7 +176,7 @@ class _LoggedInHomeScreenState extends State<LoggedInHomeScreen>
   }
 
   Widget _profilePage() {
-    return Text("profile");
+    return Text(DataService().getCurrentUser().username);
   }
 
   Widget _chattPage() {
@@ -196,8 +228,9 @@ class _LoggedInHomeScreenState extends State<LoggedInHomeScreen>
     );
   }
 
-//todo: make dislike in api and call it here
+//todo: create seperate folders for dislikes in api
   Future<void> onDragEnd(DraggableDetails details, Member member) async {
+    print(details.offset.dx);
     final minimumDrag = 100;
     if (details.offset.dx > minimumDrag) {
       setState(() => members.remove(member));
@@ -205,6 +238,8 @@ class _LoggedInHomeScreenState extends State<LoggedInHomeScreen>
       await getMembers();
     } else if (details.offset.dx < -minimumDrag) {
       setState(() => members.remove(member));
+      await DislikesOperations().addDislike(member.userName);
+      await getMembers();
     }
   }
 }

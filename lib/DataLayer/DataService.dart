@@ -131,6 +131,38 @@ class DataService {
     }
   }
 
+  Future<bool> addDisLike(String username) async {
+    try {
+      var response = await http.post(baseURL + 'dislikes/' + username,
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer ' + currentUser.token
+          });
+      if (response.statusCode == 200) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
+  Future<String> getDislikes(String command) async {
+    try {
+      var response = await http.get(baseURL + 'dislikes?predicate=' + command,
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer ' + currentUser.token
+          });
+      if ((response.statusCode >= 200 && response.statusCode <= 300)) {
+        return response.body;
+      }
+      return null;
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
   Future<void> get404Error() {
     try {} catch (e) {}
   }
