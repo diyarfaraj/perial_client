@@ -31,6 +31,7 @@ class _LoggedInHomeScreenState extends State<LoggedInHomeScreen>
   Member currentUser;
 
   TabController _tabController;
+//todo: create profile page
 
   @override
   void initState() {
@@ -228,7 +229,6 @@ class _LoggedInHomeScreenState extends State<LoggedInHomeScreen>
     );
   }
 
-//todo: create seperate folders for dislikes in api
   Future<void> onDragEnd(DraggableDetails details, Member member) async {
     print(details.offset.dx);
     final minimumDrag = 100;
