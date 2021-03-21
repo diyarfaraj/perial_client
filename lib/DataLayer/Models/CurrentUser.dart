@@ -10,8 +10,23 @@ class CurrentUser {
   String username;
   String token;
   String password;
+  int age;
+  String city;
+  String country;
+  String lookingFor;
+  String interests;
+  String introduction;
 
-  CurrentUser({this.username, this.password, this.token});
+  CurrentUser(
+      {this.username,
+      this.password,
+      this.token,
+      this.age,
+      this.city,
+      this.country,
+      this.interests,
+      this.introduction,
+      this.lookingFor});
 
   static List<CurrentUser> parseList(List<dynamic> json) {
     List<CurrentUser> data = new List<CurrentUser>();
@@ -23,10 +38,26 @@ class CurrentUser {
   }
 
   factory CurrentUser.fromJson(Map<String, dynamic> json) => CurrentUser(
-      username: json["username"],
-      password: json["password"] ?? "",
-      token: json["token"]);
+        username: json["username"],
+        password: json["password"] ?? "",
+        token: json["token"],
+        age: json["age"],
+        city: json["city"],
+        country: json["country"],
+        interests: json["interests"],
+        introduction: json["introduction"],
+        lookingFor: json["lookingFor"],
+      );
 
-  Map<String, dynamic> toJson() =>
-      {"username": username, "password": password, "token": token};
+  Map<String, dynamic> toJson() => {
+        "username": username,
+        "password": password,
+        "token": token,
+        "age": age,
+        "city": city,
+        "country": country,
+        "interests": interests,
+        "introduction": introduction,
+        "lookingFor": lookingFor,
+      };
 }
