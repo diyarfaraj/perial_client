@@ -84,7 +84,7 @@ class _LoggedInHomeScreenState extends State<LoggedInHomeScreen>
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(60),
             child: AppBar(
-              elevation: 0,
+              elevation: 2,
               backgroundColor: Colors.white,
               leading: Container(),
               bottom: TabBar(
@@ -177,7 +177,42 @@ class _LoggedInHomeScreenState extends State<LoggedInHomeScreen>
   }
 
   Widget _profilePage() {
-    return Text(DataService().getCurrentUser().username);
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+            child: CircleAvatar(
+              backgroundImage: NetworkImage(
+                DataService().getCurrentUser().mainPhoto,
+              ),
+              radius: 50.0,
+            ),
+          ),
+          SizedBox(
+            height: 10.0,
+          ),
+          Text(
+            DataService().getCurrentUser().username,
+            style: TextStyle(
+              fontSize: 22.0,
+              color: Colors.grey[900],
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(
+            height: 10.0,
+          ),
+          Text(
+            DataService().getCurrentUser().city,
+            style: TextStyle(
+              fontSize: 15.0,
+              color: Colors.grey[700],
+            ),
+          )
+        ]);
   }
 
   Widget _chattPage() {

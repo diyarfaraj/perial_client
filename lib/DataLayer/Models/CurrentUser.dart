@@ -16,6 +16,7 @@ class CurrentUser {
   String lookingFor;
   String interests;
   String introduction;
+  String mainPhoto;
 
   CurrentUser(
       {this.username,
@@ -26,7 +27,8 @@ class CurrentUser {
       this.country,
       this.interests,
       this.introduction,
-      this.lookingFor});
+      this.lookingFor,
+      this.mainPhoto});
 
   static List<CurrentUser> parseList(List<dynamic> json) {
     List<CurrentUser> data = new List<CurrentUser>();
@@ -38,16 +40,16 @@ class CurrentUser {
   }
 
   factory CurrentUser.fromJson(Map<String, dynamic> json) => CurrentUser(
-        username: json["username"],
-        password: json["password"] ?? "",
-        token: json["token"],
-        age: json["age"],
-        city: json["city"],
-        country: json["country"],
-        interests: json["interests"],
-        introduction: json["introduction"],
-        lookingFor: json["lookingFor"],
-      );
+      username: json["username"],
+      password: json["password"] ?? "",
+      token: json["token"],
+      age: json["age"],
+      city: json["city"],
+      country: json["country"],
+      interests: json["interests"],
+      introduction: json["introduction"],
+      lookingFor: json["lookingFor"],
+      mainPhoto: json["photoUrl"]);
 
   Map<String, dynamic> toJson() => {
         "username": username,
@@ -59,5 +61,6 @@ class CurrentUser {
         "interests": interests,
         "introduction": introduction,
         "lookingFor": lookingFor,
+        "mainPhoto": mainPhoto
       };
 }
