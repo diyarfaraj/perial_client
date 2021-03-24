@@ -29,7 +29,8 @@ class _LoggedInHomeScreenState extends State<LoggedInHomeScreen>
   List<UserLike> likedUsers = [];
   List<UserDislike> dislikedUsers = [];
   Member currentUser;
-
+  TextEditingController _chatTfController;
+  ScrollController _chatLVController;
   TabController _tabController;
 //todo: create profile page
 
@@ -211,12 +212,128 @@ class _LoggedInHomeScreenState extends State<LoggedInHomeScreen>
               fontSize: 15.0,
               color: Colors.grey[700],
             ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              _profileButton(
+                  Icon(
+                    Icons.settings,
+                    color: Colors.grey[400],
+                  ),
+                  "SETTINGS"),
+              _profileButton(
+                  Icon(
+                    FontAwesomeIcons.pencilAlt,
+                    color: Colors.grey[400],
+                  ),
+                  "EDIT")
+            ],
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _profileButtonOrange(
+                  Icon(
+                    Icons.camera_alt,
+                    color: Colors.white,
+                  ),
+                  "ADD MEDIA"),
+            ],
           )
         ]);
   }
 
   Widget _chattPage() {
-    return Text("chatt");
+    return SafeArea(
+      child: Container(
+        color: Colors.white,
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            _chatList(),
+            _bottomChatArea(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  _chatList() {
+    return Expanded(
+      child: Container(
+        child: ListView.builder(
+          cacheExtent: 100,
+          controller: _chatLVController,
+          reverse: false,
+          shrinkWrap: true,
+          padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
+          itemCount: 5,
+          /* null == _chatMessages ? 0 : _chatMessages.length, */
+          itemBuilder: (context, index) {
+            return Text(
+              "chatMessage",
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  _bottomChatArea() {
+    return Container(
+      color: Colors.grey[100],
+      padding: EdgeInsets.all(10.0),
+      child: Row(
+        children: <Widget>[
+          _chatTextArea(),
+          IconButton(
+            icon: Icon(
+              Icons.send,
+              color: Colors.grey,
+            ),
+            onPressed: () async {
+              //_sendButtonTap();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  _chatTextArea() {
+    return Expanded(
+      child: TextField(
+        controller: _chatTfController,
+        decoration: InputDecoration(
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            borderSide: BorderSide(
+              color: Colors.grey,
+              width: 0.0,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            borderSide: BorderSide(
+              color: Colors.white,
+              width: 0.0,
+            ),
+          ),
+          filled: true,
+          fillColor: Colors.white,
+          contentPadding: EdgeInsets.all(10.0),
+          hintText: 'Type message...',
+        ),
+      ),
+    );
   }
 
   Widget buildAppBar() => AppBar(
@@ -261,6 +378,62 @@ class _LoggedInHomeScreenState extends State<LoggedInHomeScreen>
         childWhenDragging: Container(),
         onDragEnd: (details) => onDragEnd(details, member),
       ),
+    );
+  }
+
+  Widget _profileButton(Widget icon, String title) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Material(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          elevation: 2,
+          child: Container(
+            padding: EdgeInsets.all(7),
+            decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.all(Radius.circular(20))),
+            child: icon,
+          ),
+        ),
+        SizedBox(
+          height: 5,
+        ),
+        Text(
+          title,
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
+        ),
+      ],
+    );
+  }
+
+  Widget _profileButtonOrange(Widget icon, String title) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Material(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          elevation: 2,
+          child: Container(
+            padding: EdgeInsets.all(7),
+            decoration: BoxDecoration(
+                color: Colors.deepOrange,
+                borderRadius: BorderRadius.all(Radius.circular(20))),
+            child: icon,
+          ),
+        ),
+        SizedBox(
+          height: 5,
+        ),
+        Text(
+          title,
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
+        ),
+      ],
     );
   }
 
