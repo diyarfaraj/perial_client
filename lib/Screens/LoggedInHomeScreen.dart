@@ -313,7 +313,9 @@ class _LoggedInHomeScreenState extends State<LoggedInHomeScreen>
       child: TextField(
         controller: _chatTfController,
         decoration: InputDecoration(
+          
           enabledBorder: OutlineInputBorder(
+            
             borderRadius: BorderRadius.circular(10.0),
             borderSide: BorderSide(
               color: Colors.grey,

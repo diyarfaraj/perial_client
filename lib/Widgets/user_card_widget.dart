@@ -26,7 +26,9 @@ class UserCardWidget extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         image: DecorationImage(
-          image: NetworkImage(member.photoUrl),
+          image: member.photoUrl != null
+              ? NetworkImage(member.photoUrl)
+              : AssetImage("assets/user1.jpg"),
           fit: BoxFit.cover,
         ),
       ),
