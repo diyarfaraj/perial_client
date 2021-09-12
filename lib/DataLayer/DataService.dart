@@ -20,7 +20,6 @@ class DataService {
             'Content-Type': 'application/json',
             "Accept": "application/json"
           });
-      print(response);
       if (response.statusCode >= 300) {
         return false;
       }

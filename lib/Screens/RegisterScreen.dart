@@ -16,6 +16,8 @@ var data;
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   Future<bool> register(CurrentUser user) async {
     var response = await DataService().register(user.username, user.password);
@@ -63,7 +65,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               ),
               SizedBox(height: size.height * 0.03),
-              Container(
+              /*   Container(
                 alignment: Alignment.center,
                 margin: EdgeInsets.symmetric(horizontal: 40),
                 child: TextField(
@@ -77,12 +79,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: TextField(
                   decoration: InputDecoration(labelText: "Mobile Number"),
                 ),
-              ),
+              ), */
               SizedBox(height: size.height * 0.03),
               Container(
                 alignment: Alignment.center,
                 margin: EdgeInsets.symmetric(horizontal: 40),
-                child: TextField(
+                child: TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Can not be empty';
+                    }
+                    return null;
+                  },
+                  controller: _userNameController,
                   decoration: InputDecoration(labelText: "Username"),
                 ),
               ),
@@ -90,7 +99,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Container(
                 alignment: Alignment.center,
                 margin: EdgeInsets.symmetric(horizontal: 40),
-                child: TextField(
+                child: TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Can not be empty';
+                    }
+                    return null;
+                  },
+                  controller: _passwordController,
                   decoration: InputDecoration(labelText: "Password"),
                   obscureText: true,
                 ),
@@ -100,7 +116,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 alignment: Alignment.centerRight,
                 margin: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
                 child: RaisedButton(
-                  onPressed: () async {},
+                  onPressed: () async {
+                    CurrentUser user = CurrentUser(
+                        username: _userNameController.text,
+                        password: _passwordController.text);
+                    if (_formKey.currentState.validate()) {
+                      await register(user);
+                    }
+                  },
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(80.0)),
                   textColor: Colors.white,
